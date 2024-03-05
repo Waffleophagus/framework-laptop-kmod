@@ -3,12 +3,12 @@
 %global debug_package %{nil}
 %endif
 
-Name:     ayaneo-platform-kmod
+Name:     framework-laptop-kmod
 Version:  {{{ git_dir_version }}}
 Release:  1%{?dist}
-Summary:  Linux drivers for AYANEO x86 handhelds providing RGB control. 
+Summary:  Framework Laptop stuff
 License:  GPLv3
-URL:      https://github.com/KyleGospo/ayaneo-platform
+URL:      https://github.com/Waffleophagus/framework-laptop-kmod
 
 Source:   %{url}/archive/refs/heads/main.tar.gz
 
@@ -26,12 +26,12 @@ Linux drivers for AYN x86 handhelds providing a hwmon interface for pwm fan cont
 # print kmodtool output for debugging purposes:
 kmodtool --target %{_target_cpu} --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
 
-%setup -q -c ayaneo-platform-main
+%setup -q -c framework-laptop-kmod
 
 find . -type f -name '*.c' -exec sed -i "s/#VERSION#/%{version}/" {} \+
 
 for kernel_version  in %{?kernel_versions} ; do
-  cp -a ayaneo-platform-main _kmod_build_${kernel_version%%___*}
+  cp -a framework-laptop _kmod_build_${kernel_version%%___*}
 done
 
 %build
@@ -42,8 +42,8 @@ done
 %install
 for kernel_version in %{?kernel_versions}; do
  mkdir -p %{buildroot}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
- install -D -m 755 _kmod_build_${kernel_version%%___*}/framework-laptop-kmod.ko %{buildroot}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
- chmod a+x %{buildroot}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/ayaneo-platform.ko
+ install -D -m 755 _kmod_build_${kernel_version%%___*}/framework_laptop.ko %{buildroot}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
+ chmod a+x %{buildroot}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/framework_laptop.ko
 done
 %{?akmod_install}
 
